@@ -1,16 +1,50 @@
-name: Github Actions demo
-
-run-name: ${{github.actor}} esta ejecutando un pipeline
+run-name: ${{github.actor}} esta ejecutando el pipeline de TerraFleet
 on: [push]
-
+ 
 jobs:
-  Saludar-Hello-World:
+  Validar-Proyecto:
     runs-on: ubuntu-latest
     steps:
-      - run: echo "Este job ha sido ejecutado ${{github.event_name}}"
+      - name: Checkout repository
+        uses: actions/checkout@v6
+      - run: echo "Lint al proyecto con npm lint y analisis con SonarQube"
+ 
+  Validar-Terraform:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "terraform init, fmt y validate, y escaneo de seguridad con tfsec / checkov"
+ 
+  Terraform-Plan:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "Configurar credenciales de AWS, ejecutar terraform plan y esperar aprobacion del equipo"
+ 
+  Desplegar-Base:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "Crear IAM, Secrets Manager, Cognito, CloudTrail y CloudWatch"
+      - run: echo "Crear Aurora PostgreSQL, buckets S3, colas SQS y SES"
+ 
+  Desplegar-Backend:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "Desplegar las 8 funciones Lambda y crear API Gateway con el authorizer de Cognito"
+ 
+  Desplegar-Frontend:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "Subir la web a S3 y publicarla con CloudFront, WAF y Route 53"
+ 
+  Pruebas:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "Probar busqueda, disponibilidad y reserva, y simular 150 usuarios simultaneos"
+ 
+  Auditoria-Final:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "Este job ha sido ejecutado por el evento ${{github.event_name}}"
       - run: echo "El nombre de la rama es ${{github.ref}}. Y el repositorio es ${{github.repository}}"
       - name: Checkout repository
         uses: actions/checkout@v6
-      - name: Listar los archivos del repositorio
-        run: |
-          ls ${{github.workspace}}
+      - run: echo "Auditoria final completada: ambiente de TerraFleet desplegado, validado y entregado"
